@@ -19,3 +19,90 @@ User Interface: Create a simple user interface to demonstrate the autocomplete f
 Efficiency Optimization: Implement optimization techniques such as compression, pruning, and caching to improve the performance of the autocomplete feature, especially for large datasets.
 
 Testing and Benchmarking: Develop test cases to validate the functionality of the autocomplete feature and measure its performance using various input sizes and scenarios
+
+#Code Explain :-
+
+Let's go through the code and explain its functionality step by step:
+
+1. We start by including necessary header files:
+   ```cpp
+   #include <iostream>
+   #include <vector>
+   #include <algorithm>
+   ```
+
+2. Next, we define the TrieNode structure:
+   ```cpp
+   struct TrieNode {
+       bool isEndOfWord;
+       std::vector<TrieNode*> children;
+
+       TrieNode() : isEndOfWord(false), children(26, nullptr) {}
+   };
+   ```
+   - The `TrieNode` structure represents a node in the Trie. It contains a boolean flag `isEndOfWord` to indicate if the node marks the end of a word.
+   - The `children` vector holds pointers to child nodes. Since we are working with lowercase English letters, we allocate space for 26 child nodes (one for each letter of the alphabet) and initialize them to `nullptr` using the constructor initializer list.
+
+3. Next, we define the Trie class:
+   ```cpp
+   class Trie {
+   public:
+       Trie() {
+           root = new TrieNode();
+       }
+
+       void insert(const std::string& word) {
+           // ...
+       }
+
+       std::vector<std::string> autocomplete(const std::string& prefix) {
+           // ...
+       }
+
+   private:
+       TrieNode* root;
+
+       TrieNode* getPrefixNode(const std::string& prefix) {
+           // ...
+       }
+
+       void dfs(TrieNode* node, std::string currentWord, std::vector<std::string>& suggestions) {
+           // ...
+       }
+   };
+   ```
+   - The `Trie` class represents the Trie data structure. It has member functions for inserting words, retrieving autocomplete suggestions, and other private helper functions.
+   - The `root` member variable holds a pointer to the root node of the Trie.
+
+4. We implement the `insert` function in the Trie class:
+   ```cpp
+   void insert(const std::string& word) {
+       TrieNode* current = root;
+       for (char c : word) {
+           int index = c - 'a';
+           if (current->children[index] == nullptr)
+               current->children[index] = new TrieNode();
+           current = current->children[index];
+       }
+       current->isEndOfWord = true;
+   }
+   ```
+   - The `insert` function takes a word as input and inserts it into the Trie. It starts from the root node and traverses the Trie based on the characters of the word.
+   - For each character `c` in the word, we calculate the corresponding index `index` by subtracting the ASCII value of 'a'. This index is used to access the child node in the `children` vector.
+   - If the child node does not exist (`nullptr`), we create a new TrieNode and assign it to the `children` vector. Then, we move to the child node.
+   - Finally, we mark the last node as the end of the word by setting the `isEndOfWord` flag to `true`.
+
+5. We implement the `autocomplete` function in the Trie class:
+   ```cpp
+   std::vector<std::string> autocomplete(const std::string& prefix) {
+       std::vector<std::string> suggestions;
+       TrieNode* prefixNode = getPrefixNode(prefix);
+       if (prefixNode != nullptr) {
+           std::string currentWord = prefix;
+           dfs(prefixNode, currentWord, suggestions);
+       }
+       return suggestions;
+   }
+   ```
+   - The `autocomplete` function takes a prefix as input and returns a vector of autocomplete suggestions.
+   - It first checks if the prefix exists in the Trie by
